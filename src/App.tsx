@@ -78,6 +78,7 @@ export default function App() {
   const [selectedDate, setSelectedDate] = useState('');
   const [formData, setFormData] = useState({
     name: '',
+    email: '',
     phone: '',
     service: '',
     location: '',
@@ -100,7 +101,27 @@ export default function App() {
     setSubmitError('');
 
     try {
-      // 1. Submit to Netlify Forms (This handles the email to parthi1010891@gmail.com)
+      // 1. Submit to Supabase (Primary Database)
+      if (!supabase) {
+        throw new Error('Supabase is not configured. Please add VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY to your secrets.');
+      }
+
+      const { error: supabaseError } = await supabase
+        .from('bookings')
+        .insert([
+          {
+            ...formData,
+            date: selectedDate,
+            time: `${selectedDay.toLowerCase()}_evening`,
+          }
+        ]);
+
+      if (supabaseError) {
+        console.error('Supabase Insert Error:', supabaseError);
+        throw new Error(`Supabase Error: ${supabaseError.message}`);
+      }
+
+      // 2. Submit to Netlify Forms (This handles the email to parthi1010891@gmail.com)
       const encode = (data: any) => {
         return Object.keys(data)
           .map(key => encodeURIComponent(key) + "=" + encodeURIComponent(data[key]))
@@ -113,6 +134,7 @@ export default function App() {
         body: encode({
           "form-name": "booking",
           "name": formData.name,
+          "email": formData.email,
           "phone": formData.phone,
           "service": formData.service,
           "date": selectedDate,
@@ -123,29 +145,19 @@ export default function App() {
       });
 
       if (!netlifyResponse.ok) {
-        throw new Error('Failed to submit form to Netlify.');
-      }
-
-      // 2. Optional: Submit to Supabase if configured (as a backup database)
-      if (supabase) {
-        const { error } = await supabase
-          .from('bookings')
-          .insert([
-            {
-              ...formData,
-              date: selectedDate,
-              time: `${selectedDay.toLowerCase()}_evening`,
-            }
-          ]);
-
-        if (error) {
-          console.warn('Supabase Insert Error (Non-fatal since Netlify succeeded):', error);
+        // Netlify forms only work when hosted on Netlify. 
+        // If we are in the AI Studio preview or localhost, we simulate success.
+        if (window.location.hostname.includes('run.app') || window.location.hostname.includes('localhost')) {
+          console.warn('Netlify forms require Netlify hosting. Simulating success for preview environment.');
+        } else {
+          console.error('Netlify Form Error: Failed to submit.');
+          // We don't throw here because Supabase succeeded, but we log it.
         }
       }
 
       setIsBooking(true);
       // Reset form
-      setFormData({ name: '', phone: '', service: '', location: '', notes: '' });
+      setFormData({ name: '', email: '', phone: '', service: '', location: '', notes: '' });
       setSelectedDate('');
     } catch (err) {
       console.error('Submission Error:', err);
@@ -362,9 +374,13 @@ export default function App() {
               </motion.div>
             ) : (
               <form 
+                name="booking"
+                method="POST"
+                data-netlify="true"
                 onSubmit={handleSubmit}
                 className="space-y-6"
               >
+                <input type="hidden" name="form-name" value="booking" />
                 {submitError && (
                   <div className="p-4 bg-red-50 text-red-600 rounded-xl border border-red-100 text-sm">
                     {submitError}
@@ -376,6 +392,7 @@ export default function App() {
                     <input 
                       required
                       type="text" 
+                      name="name"
                       value={formData.name}
                       onChange={(e) => setFormData({...formData, name: e.target.value})}
                       className="w-full px-4 py-3 rounded-xl border border-stone-200 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-all"
@@ -383,31 +400,47 @@ export default function App() {
                     />
                   </div>
                   <div>
+                    <label className="block text-sm font-medium text-stone-700 mb-2">Email</label>
+                    <input 
+                      required
+                      type="email" 
+                      name="email"
+                      value={formData.email}
+                      onChange={(e) => setFormData({...formData, email: e.target.value})}
+                      className="w-full px-4 py-3 rounded-xl border border-stone-200 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-all"
+                      placeholder="Your email address"
+                    />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
                     <label className="block text-sm font-medium text-stone-700 mb-2">Phone Number</label>
                     <input 
                       required
                       type="tel" 
+                      name="phone"
                       value={formData.phone}
                       onChange={(e) => setFormData({...formData, phone: e.target.value})}
                       className="w-full px-4 py-3 rounded-xl border border-stone-200 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-all"
                       placeholder="Your phone number"
                     />
                   </div>
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-stone-700 mb-2">Service Required</label>
-                  <select 
-                    required
-                    value={formData.service}
-                    onChange={(e) => setFormData({...formData, service: e.target.value})}
-                    className="w-full px-4 py-3 rounded-xl border border-stone-200 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-all bg-white"
-                  >
-                    <option value="">Select a service...</option>
-                    {services.map(s => (
-                      <option key={s.title} value={s.title}>{s.title}</option>
-                    ))}
-                  </select>
+                  <div>
+                    <label className="block text-sm font-medium text-stone-700 mb-2">Service Required</label>
+                    <select 
+                      required
+                      name="service"
+                      value={formData.service}
+                      onChange={(e) => setFormData({...formData, service: e.target.value})}
+                      className="w-full px-4 py-3 rounded-xl border border-stone-200 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-all bg-white"
+                    >
+                      <option value="">Select a service...</option>
+                      {services.map(s => (
+                        <option key={s.title} value={s.title}>{s.title}</option>
+                      ))}
+                    </select>
+                  </div>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -416,6 +449,7 @@ export default function App() {
                     <input 
                       required
                       type="date" 
+                      name="date"
                       value={selectedDate}
                       onChange={(e) => setSelectedDate(e.target.value)}
                       className="w-full px-4 py-3 rounded-xl border border-stone-200 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-all"
@@ -425,6 +459,7 @@ export default function App() {
                     <label className="block text-sm font-medium text-stone-700 mb-2">Preferred Time</label>
                     <select 
                       required
+                      name="time"
                       disabled={!selectedDate}
                       className="w-full px-4 py-3 rounded-xl border border-stone-200 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-all bg-white disabled:bg-stone-100 disabled:text-stone-400"
                     >
@@ -442,6 +477,7 @@ export default function App() {
                   <label className="block text-sm font-medium text-stone-700 mb-2">Location / Area</label>
                   <select 
                     required
+                    name="location"
                     value={formData.location}
                     onChange={(e) => setFormData({...formData, location: e.target.value})}
                     className="w-full px-4 py-3 rounded-xl border border-stone-200 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-all bg-white"
@@ -462,6 +498,7 @@ export default function App() {
                   <label className="block text-sm font-medium text-stone-700 mb-2">Additional Notes</label>
                   <textarea 
                     rows={4}
+                    name="notes"
                     value={formData.notes}
                     onChange={(e) => setFormData({...formData, notes: e.target.value})}
                     className="w-full px-4 py-3 rounded-xl border border-stone-200 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-all resize-none"
