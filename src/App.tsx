@@ -121,38 +121,28 @@ export default function App() {
         throw new Error(`Supabase Error: ${supabaseError.message}`);
       }
 
-      // 2. Submit to Netlify Forms (This handles the email to parthi1010891@gmail.com)
-      const encode = (data: any) => {
-        return Object.keys(data)
-          .map(key => encodeURIComponent(key) + "=" + encodeURIComponent(data[key]))
-          .join("&");
-      };
-
-      const netlifyResponse = await fetch("/", {
+      // 2. Send Email Notification directly to parthi1010891@gmail.com
+      const emailResponse = await fetch("https://formsubmit.co/ajax/parthi1010891@gmail.com", {
         method: "POST",
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: encode({
-          "form-name": "booking",
-          "name": formData.name,
-          "email": formData.email,
-          "phone": formData.phone,
-          "service": formData.service,
-          "date": selectedDate,
-          "time": `${selectedDay.toLowerCase()}_evening`,
-          "location": formData.location,
-          "notes": formData.notes
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json"
+        },
+        body: JSON.stringify({
+          _subject: `New Booking Request: ${formData.service}`,
+          Name: formData.name,
+          Email: formData.email,
+          Phone: formData.phone,
+          Service: formData.service,
+          Date: selectedDate,
+          Time: `${selectedDay.toLowerCase()}_evening`,
+          Location: formData.location,
+          Notes: formData.notes || "None provided"
         })
       });
 
-      if (!netlifyResponse.ok) {
-        // Netlify forms only work when hosted on Netlify. 
-        // If we are in the AI Studio preview or localhost, we simulate success.
-        if (window.location.hostname.includes('run.app') || window.location.hostname.includes('localhost')) {
-          console.warn('Netlify forms require Netlify hosting. Simulating success for preview environment.');
-        } else {
-          console.error('Netlify Form Error: Failed to submit.');
-          // We don't throw here because Supabase succeeded, but we log it.
-        }
+      if (!emailResponse.ok) {
+        console.error('Email Notification Error: Failed to send email.');
       }
 
       setIsBooking(true);
@@ -374,13 +364,9 @@ export default function App() {
               </motion.div>
             ) : (
               <form 
-                name="booking"
-                method="POST"
-                data-netlify="true"
                 onSubmit={handleSubmit}
                 className="space-y-6"
               >
-                <input type="hidden" name="form-name" value="booking" />
                 {submitError && (
                   <div className="p-4 bg-red-50 text-red-600 rounded-xl border border-red-100 text-sm">
                     {submitError}
