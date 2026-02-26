@@ -28,8 +28,8 @@ const services = [
     color: 'bg-blue-100 text-blue-600',
   },
   {
-    title: 'Cookies, Cake & Snacks',
-    description: 'Delicious homemade treats distributed fresh to your door.',
+    title: 'Snacks Distribution',
+    description: 'UNIBIC, A2B (5,10,20,35), OTTER, DONUT ZIGGY, NATURO JELLY',
     icon: Cookie,
     color: 'bg-amber-100 text-amber-600',
   },
