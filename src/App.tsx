@@ -100,23 +100,47 @@ export default function App() {
     setSubmitError('');
 
     try {
-      if (!supabase) {
-        throw new Error('Supabase is not configured. Please set up your environment variables.');
+      // 1. Submit to Netlify Forms (This handles the email to parthi1010891@gmail.com)
+      const encode = (data: any) => {
+        return Object.keys(data)
+          .map(key => encodeURIComponent(key) + "=" + encodeURIComponent(data[key]))
+          .join("&");
+      };
+
+      const netlifyResponse = await fetch("/", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: encode({
+          "form-name": "booking",
+          "name": formData.name,
+          "phone": formData.phone,
+          "service": formData.service,
+          "date": selectedDate,
+          "time": `${selectedDay.toLowerCase()}_evening`,
+          "location": formData.location,
+          "notes": formData.notes
+        })
+      });
+
+      if (!netlifyResponse.ok) {
+        throw new Error('Failed to submit form to Netlify.');
       }
 
-      const { error } = await supabase
-        .from('bookings')
-        .insert([
-          {
-            ...formData,
-            date: selectedDate,
-            time: `${selectedDay.toLowerCase()}_evening`,
-          }
-        ]);
+      // 2. Optional: Submit to Supabase if configured (as a backup database)
+      if (supabase) {
+        const { error } = await supabase
+          .from('bookings')
+          .insert([
+            {
+              ...formData,
+              date: selectedDate,
+              time: `${selectedDay.toLowerCase()}_evening`,
+            }
+          ]);
 
-      if (error) {
-        console.error('Supabase Insert Error:', error);
-        throw new Error(error.message || 'Failed to connect to the database.');
+        if (error) {
+          console.warn('Supabase Insert Error (Non-fatal since Netlify succeeded):', error);
+        }
       }
 
       setIsBooking(true);
@@ -124,6 +148,7 @@ export default function App() {
       setFormData({ name: '', phone: '', service: '', location: '', notes: '' });
       setSelectedDate('');
     } catch (err) {
+      console.error('Submission Error:', err);
       setSubmitError(err instanceof Error ? err.message : 'Failed to submit booking. Please try again.');
     } finally {
       setIsSubmitting(false);
