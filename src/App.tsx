@@ -15,7 +15,8 @@ import {
   CreditCard,
   FlaskConical,
   Heart,
-  Loader2
+  Loader2,
+  Brush
 } from 'lucide-react';
 import { useState } from 'react';
 import { supabase } from './supabase';
@@ -26,42 +27,56 @@ const services = [
     description: 'Custom software solutions, web development, and tech support.',
     icon: Code,
     color: 'bg-blue-100 text-blue-600',
+    price: '₹500 / hr',
   },
   {
     title: 'Snacks Distribution',
     description: 'UNIBIC, A2B (5,10,20,35), OTTER, DONUT ZIGGY, NATURO JELLY',
     icon: Cookie,
     color: 'bg-amber-100 text-amber-600',
+    price: 'MRP Based',
   },
   {
     title: 'Housekeeping Materials',
     description: 'High-quality cleaning supplies and housekeeping materials distributor.',
     icon: SprayCan,
     color: 'bg-teal-100 text-teal-600',
+    price: 'Wholesale Rates',
   },
   {
     title: 'Deep Cleaning Services',
     description: 'Thorough deep cleaning for homes and offices to ensure a spotless environment.',
     icon: Sparkles,
     color: 'bg-emerald-100 text-emerald-600',
+    price: '₹1,500 / session',
   },
   {
     title: 'Housekeeping Services',
     description: 'Regular housekeeping and maintenance to keep your space organized.',
     icon: Home,
     color: 'bg-indigo-100 text-indigo-600',
+    price: '₹600 / day',
   },
   {
     title: 'Gardening Work',
     description: 'Professional gardening, landscaping, and plant care services.',
     icon: Leaf,
     color: 'bg-green-100 text-green-600',
+    price: '₹500 / visit',
   },
   {
     title: 'Car Cleaning',
     description: 'Detailed interior and exterior car cleaning and washing.',
     icon: Car,
     color: 'bg-slate-100 text-slate-600',
+    price: '₹400 / wash',
+  },
+  {
+    title: 'Gate Cleaning',
+    description: 'Detailed gate scrubbing and high-ceiling dust removal using specialized brushing tools.',
+    icon: Brush,
+    color: 'bg-orange-100 text-orange-600',
+    price: '₹300 / gate',
   },
 ];
 
@@ -251,9 +266,12 @@ export default function App() {
                   <service.icon className="w-6 h-6" />
                 </div>
                 <h3 className="text-xl font-semibold mb-2">{service.title}</h3>
-                <p className="text-stone-600 leading-relaxed">
+                <p className="text-stone-600 leading-relaxed mb-4">
                   {service.description}
                 </p>
+                <div className="inline-flex items-center px-3 py-1 rounded-full bg-stone-200/50 text-stone-700 text-sm font-medium">
+                  {service.price}
+                </div>
               </motion.div>
             ))}
           </div>
