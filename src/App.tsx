@@ -16,7 +16,10 @@ import {
   FlaskConical,
   Heart,
   Loader2,
-  Brush
+  Brush,
+  X,
+  Shield,
+  FileText
 } from 'lucide-react';
 import { useState } from 'react';
 import { supabase } from './supabase';
@@ -91,6 +94,7 @@ export default function App() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState('');
   const [selectedDate, setSelectedDate] = useState('');
+  const [activeModal, setActiveModal] = useState<'privacy' | 'terms' | null>(null);
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -236,6 +240,49 @@ export default function App() {
               >
                 Book Now
               </button>
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
+      {/* About Us Section */}
+      <section id="about" className="py-24 bg-stone-50 border-t border-stone-200">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid md:grid-cols-2 gap-16 items-center">
+            <motion.div 
+              initial={{ opacity: 0, x: -20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+            >
+              <h2 className="text-3xl font-bold mb-6">About Parthi Services</h2>
+              <p className="text-stone-600 mb-6 leading-relaxed">
+                Parthi Services is a premier multi-service provider dedicated to delivering exceptional quality across various domains. Founded on the principles of reliability, professionalism, and customer satisfaction, we have grown to become a trusted partner for both residential and commercial clients.
+              </p>
+              <p className="text-stone-600 mb-6 leading-relaxed">
+                Whether you need cutting-edge software solutions, meticulous deep cleaning, professional gardening, or reliable distribution of high-quality snacks and housekeeping materials, our team is equipped with the expertise and dedication to exceed your expectations.
+              </p>
+              <p className="text-stone-600 leading-relaxed">
+                We pride ourselves on our flexible scheduling, transparent pricing, and unwavering commitment to excellence. Your satisfaction is our top priority, and we continuously strive to innovate and improve our service offerings to better serve our community.
+              </p>
+            </motion.div>
+            <motion.div 
+              initial={{ opacity: 0, x: 20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              className="relative h-[400px] rounded-3xl overflow-hidden shadow-2xl"
+            >
+              <img 
+                src="https://picsum.photos/seed/business/800/1000" 
+                alt="Professional Services" 
+                className="absolute inset-0 w-full h-full object-cover"
+                referrerPolicy="no-referrer"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-stone-900/80 to-transparent flex items-end p-8">
+                <div className="text-white">
+                  <p className="font-bold text-xl mb-2">Committed to Excellence</p>
+                  <p className="text-stone-300">Serving our community with pride and dedication.</p>
+                </div>
+              </div>
             </motion.div>
           </div>
         </div>
@@ -569,17 +616,124 @@ export default function App() {
       </section>
 
       {/* Footer */}
-      <footer className="bg-stone-900 border-t border-stone-800 py-12 text-center text-stone-400">
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="w-12 h-12 bg-emerald-600/20 text-emerald-500 rounded-xl flex items-center justify-center font-bold mx-auto mb-6 text-xl">
-            P
+      <footer className="bg-stone-900 border-t border-stone-800 pt-16 pb-8 text-stone-400">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-12 mb-12">
+            <div>
+              <div className="flex items-center gap-3 mb-6">
+                <div className="w-10 h-10 bg-emerald-600/20 text-emerald-500 rounded-xl flex items-center justify-center font-bold text-xl">
+                  P
+                </div>
+                <span className="font-semibold text-xl text-white tracking-tight">Parthi Services</span>
+              </div>
+              <p className="text-stone-400 leading-relaxed mb-6">
+                Professional multi-service provider offering software programming, deep cleaning, housekeeping, snacks distribution, and more.
+              </p>
+            </div>
+            
+            <div>
+              <h3 className="text-white font-semibold mb-6">Quick Links</h3>
+              <ul className="space-y-4">
+                <li>
+                  <button onClick={() => document.getElementById('about')?.scrollIntoView({ behavior: 'smooth' })} className="hover:text-emerald-400 transition-colors">About Us</button>
+                </li>
+                <li>
+                  <button onClick={() => document.getElementById('services')?.scrollIntoView({ behavior: 'smooth' })} className="hover:text-emerald-400 transition-colors">Our Services</button>
+                </li>
+                <li>
+                  <button onClick={() => document.getElementById('booking')?.scrollIntoView({ behavior: 'smooth' })} className="hover:text-emerald-400 transition-colors">Book Appointment</button>
+                </li>
+              </ul>
+            </div>
+            
+            <div>
+              <h3 className="text-white font-semibold mb-6">Legal</h3>
+              <ul className="space-y-4">
+                <li>
+                  <button onClick={() => setActiveModal('privacy')} className="hover:text-emerald-400 transition-colors flex items-center gap-2">
+                    <Shield className="w-4 h-4" /> Privacy Policy
+                  </button>
+                </li>
+                <li>
+                  <button onClick={() => setActiveModal('terms')} className="hover:text-emerald-400 transition-colors flex items-center gap-2">
+                    <FileText className="w-4 h-4" /> Terms of Service
+                  </button>
+                </li>
+              </ul>
+            </div>
           </div>
-          <p className="mb-4">Professional Services by Parthi</p>
-          <p className="text-sm text-stone-500">
-            © {new Date().getFullYear()} Parthi Services. All rights reserved.
-          </p>
+          
+          <div className="pt-8 border-t border-stone-800 text-center text-sm text-stone-500 flex flex-col md:flex-row justify-between items-center gap-4">
+            <p>© {new Date().getFullYear()} Parthi Services. All rights reserved.</p>
+            <p>Designed for excellence.</p>
+          </div>
         </div>
       </footer>
+
+      {/* Legal Modals */}
+      {activeModal && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-stone-900/80 backdrop-blur-sm">
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="bg-white rounded-3xl w-full max-w-2xl max-h-[80vh] overflow-hidden shadow-2xl flex flex-col"
+          >
+            <div className="p-6 border-b border-stone-100 flex justify-between items-center bg-stone-50">
+              <h2 className="text-2xl font-bold text-stone-900">
+                {activeModal === 'privacy' ? 'Privacy Policy' : 'Terms of Service'}
+              </h2>
+              <button 
+                onClick={() => setActiveModal(null)}
+                className="p-2 hover:bg-stone-200 rounded-full transition-colors"
+              >
+                <X className="w-6 h-6 text-stone-500" />
+              </button>
+            </div>
+            <div className="p-6 overflow-y-auto text-stone-600 prose prose-stone max-w-none">
+              {activeModal === 'privacy' ? (
+                <>
+                  <p>Last updated: {new Date().toLocaleDateString()}</p>
+                  <h3 className="text-lg font-semibold text-stone-900 mt-6 mb-2">1. Information We Collect</h3>
+                  <p>We collect information you provide directly to us when you fill out our booking form, including your name, email address, phone number, and location details. We use this information solely to provide our services and communicate with you.</p>
+                  
+                  <h3 className="text-lg font-semibold text-stone-900 mt-6 mb-2">2. Google AdSense & Cookies</h3>
+                  <p>Third party vendors, including Google, use cookies to serve ads based on a user's prior visits to your website or other websites. Google's use of advertising cookies enables it and its partners to serve ads to your users based on their visit to your sites and/or other sites on the Internet.</p>
+                  <p>Users may opt out of personalized advertising by visiting <a href="https://www.google.com/settings/ads" target="_blank" rel="noreferrer" className="text-emerald-600 hover:underline">Ads Settings</a>.</p>
+                  
+                  <h3 className="text-lg font-semibold text-stone-900 mt-6 mb-2">3. Data Security</h3>
+                  <p>We implement appropriate technical and organizational measures to maintain the safety of your personal information. However, no method of transmission over the Internet or electronic storage is 100% secure.</p>
+                  
+                  <h3 className="text-lg font-semibold text-stone-900 mt-6 mb-2">4. Contact Us</h3>
+                  <p>If you have any questions about this Privacy Policy, please contact us at parthi1010891@gmail.com.</p>
+                </>
+              ) : (
+                <>
+                  <p>Last updated: {new Date().toLocaleDateString()}</p>
+                  <h3 className="text-lg font-semibold text-stone-900 mt-6 mb-2">1. Acceptance of Terms</h3>
+                  <p>By accessing and using this website, you accept and agree to be bound by the terms and provision of this agreement.</p>
+                  
+                  <h3 className="text-lg font-semibold text-stone-900 mt-6 mb-2">2. Service Provision</h3>
+                  <p>We reserve the right to refuse service to anyone for any reason at any time. Prices for our products and services are subject to change without notice.</p>
+                  
+                  <h3 className="text-lg font-semibold text-stone-900 mt-6 mb-2">3. Booking and Cancellations</h3>
+                  <p>When you book a service, you agree to provide current, complete, and accurate information. We reserve the right to cancel or reschedule appointments due to unforeseen circumstances.</p>
+                  
+                  <h3 className="text-lg font-semibold text-stone-900 mt-6 mb-2">4. Limitation of Liability</h3>
+                  <p>In no case shall Parthi Services, our directors, officers, employees, affiliates, agents, contractors, or licensors be liable for any injury, loss, claim, or any direct, indirect, incidental, punitive, special, or consequential damages of any kind.</p>
+                </>
+              )}
+            </div>
+            <div className="p-6 border-t border-stone-100 bg-stone-50 text-right">
+              <button 
+                onClick={() => setActiveModal(null)}
+                className="bg-stone-900 hover:bg-stone-800 text-white px-6 py-2 rounded-xl font-medium transition-colors"
+              >
+                Close
+              </button>
+            </div>
+          </motion.div>
+        </div>
+      )}
     </div>
   );
 }
