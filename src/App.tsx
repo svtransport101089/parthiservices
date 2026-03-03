@@ -19,9 +19,10 @@ import {
   Brush,
   X,
   Shield,
-  FileText
+  FileText,
+  Mail
 } from 'lucide-react';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { supabase } from './supabase';
 
 const services = [
@@ -68,8 +69,8 @@ const services = [
     price: '₹500 / visit',
   },
   {
-    title: 'Car Cleaning',
-    description: 'Detailed interior and exterior car cleaning and washing.',
+    title: 'Car Cleaning with Cloth Only',
+    description: 'Detailed interior and exterior car cleaning with cloth only.',
     icon: Car,
     color: 'bg-slate-100 text-slate-600',
     price: '₹400 / wash',
@@ -179,70 +180,106 @@ export default function App() {
   return (
     <div className="min-h-screen bg-stone-50 font-sans text-stone-900 selection:bg-emerald-200">
       {/* Navigation */}
-      <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-stone-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between h-16 items-center">
-            <div className="flex items-center gap-2">
-              <div className="w-8 h-8 bg-emerald-600 rounded-lg flex items-center justify-center text-white font-bold">
-                P
-              </div>
-              <span className="font-semibold text-xl tracking-tight">Parthi Services</span>
+      <nav className="fixed top-4 left-0 right-0 z-50 px-4">
+        <div className="max-w-5xl mx-auto bg-white/80 backdrop-blur-xl border border-white/40 shadow-xl shadow-stone-200/20 rounded-2xl px-6 py-4 flex justify-between items-center">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-xl flex items-center justify-center text-white font-display font-bold text-xl shadow-lg shadow-emerald-600/20">
+              P
             </div>
-            <button 
-              onClick={() => document.getElementById('booking')?.scrollIntoView({ behavior: 'smooth' })}
-              className="bg-emerald-600 hover:bg-emerald-700 text-white px-5 py-2 rounded-full font-medium transition-colors text-sm"
-            >
-              Book Appointment
-            </button>
+            <span className="font-display font-bold text-xl tracking-tight text-stone-900">Parthi Services</span>
           </div>
+          <div className="hidden md:flex items-center gap-8 font-medium text-stone-600">
+            <button onClick={() => document.getElementById('about')?.scrollIntoView({ behavior: 'smooth' })} className="hover:text-emerald-600 transition-colors">About</button>
+            <button onClick={() => document.getElementById('services')?.scrollIntoView({ behavior: 'smooth' })} className="hover:text-emerald-600 transition-colors">Services</button>
+            <button onClick={() => document.getElementById('booking')?.scrollIntoView({ behavior: 'smooth' })} className="hover:text-emerald-600 transition-colors">Book</button>
+          </div>
+          <button 
+            onClick={() => document.getElementById('booking')?.scrollIntoView({ behavior: 'smooth' })}
+            className="bg-stone-900 hover:bg-emerald-600 text-white px-6 py-2.5 rounded-xl font-medium transition-all duration-300 shadow-lg shadow-stone-900/20 hover:shadow-emerald-600/30 text-sm"
+          >
+            Get Started
+          </button>
         </div>
       </nav>
 
       {/* Hero Section */}
-      <section className="relative pt-20 pb-32 overflow-hidden">
+      <section className="relative min-h-[90vh] flex items-center justify-center overflow-hidden bg-stone-950 pt-20">
+        {/* Atmospheric Background */}
+        <div className="absolute inset-0 overflow-hidden">
+          <div className="absolute -top-[20%] -left-[10%] w-[50%] h-[50%] rounded-full bg-emerald-600/20 blur-[120px]" />
+          <div className="absolute top-[60%] -right-[10%] w-[40%] h-[40%] rounded-full bg-teal-600/20 blur-[120px]" />
+        </div>
         <motion.div 
           style={{ y }}
-          className="absolute inset-0 bg-[url('https://picsum.photos/seed/clean/1920/1080?blur=4')] bg-cover bg-center opacity-10 h-[150%]" 
+          className="absolute inset-0 bg-[url('https://picsum.photos/seed/luxuryhome/1920/1080?blur=2')] bg-cover bg-center opacity-20 mix-blend-overlay h-[120%]" 
         />
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="text-center max-w-3xl mx-auto">
-            <motion.h1 
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="text-5xl md:text-6xl font-bold tracking-tight text-stone-900 mb-6"
+        
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full">
+          <div className="text-center max-w-4xl mx-auto">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.5 }}
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 border border-white/10 backdrop-blur-md text-emerald-300 text-sm font-medium mb-8"
             >
-              Professional Services for Your <span className="text-emerald-600">Home & Business</span>
+              <Sparkles className="w-4 h-4" />
+              Premium Home & Business Solutions
+            </motion.div>
+            
+            <motion.h1 
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, delay: 0.1 }}
+              className="font-display text-5xl md:text-7xl lg:text-8xl font-bold tracking-tight text-white mb-8 leading-[1.1]"
+            >
+              Elevate Your <br/>
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-300">
+                Space & Business
+              </span>
             </motion.h1>
+            
             <motion.p 
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.1 }}
-              className="text-lg text-stone-600 mb-8"
+              transition={{ duration: 0.7, delay: 0.2 }}
+              className="text-lg md:text-xl text-stone-300 mb-10 max-w-2xl mx-auto leading-relaxed"
             >
-              From software programming to deep cleaning, gardening, and delicious snacks. 
-              A multi-talented professional ready to serve you with excellence.
+              From custom software to deep cleaning, gardening, and premium snacks. 
+              Experience multi-talented professional excellence.
             </motion.p>
+            
             <motion.div 
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2 }}
+              transition={{ duration: 0.7, delay: 0.3 }}
               className="flex flex-col sm:flex-row justify-center gap-4"
             >
               <button 
-                onClick={() => document.getElementById('services')?.scrollIntoView({ behavior: 'smooth' })}
-                className="bg-white border border-stone-200 hover:border-emerald-600 hover:text-emerald-600 text-stone-900 px-8 py-3 rounded-full font-medium transition-all"
+                onClick={() => document.getElementById('booking')?.scrollIntoView({ behavior: 'smooth' })}
+                className="bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-white px-8 py-4 rounded-full font-medium transition-all shadow-lg shadow-emerald-500/25 text-lg"
               >
-                Explore Services
+                Book an Appointment
               </button>
               <button 
-                onClick={() => document.getElementById('booking')?.scrollIntoView({ behavior: 'smooth' })}
-                className="bg-emerald-600 hover:bg-emerald-700 text-white px-8 py-3 rounded-full font-medium transition-colors shadow-lg shadow-emerald-600/20"
+                onClick={() => document.getElementById('services')?.scrollIntoView({ behavior: 'smooth' })}
+                className="bg-white/10 hover:bg-white/20 border border-white/20 text-white backdrop-blur-md px-8 py-4 rounded-full font-medium transition-all text-lg"
               >
-                Book Now
+                Explore Services
               </button>
             </motion.div>
           </div>
         </div>
+        
+        {/* Scroll Indicator */}
+        <motion.div 
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1, duration: 1 }}
+          className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-stone-400"
+        >
+          <span className="text-xs uppercase tracking-widest font-medium">Scroll</span>
+          <div className="w-[1px] h-12 bg-gradient-to-b from-stone-400 to-transparent" />
+        </motion.div>
       </section>
 
       {/* About Us Section */}
@@ -254,14 +291,14 @@ export default function App() {
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
             >
-              <h2 className="text-3xl font-bold mb-6">About Parthi Services</h2>
-              <p className="text-stone-600 mb-6 leading-relaxed">
+              <h2 className="font-display text-4xl md:text-5xl font-bold mb-6 text-stone-900">About Parthi Services</h2>
+              <p className="text-stone-600 mb-6 leading-relaxed text-lg">
                 Parthi Services is a premier multi-service provider dedicated to delivering exceptional quality across various domains. Founded on the principles of reliability, professionalism, and customer satisfaction, we have grown to become a trusted partner for both residential and commercial clients.
               </p>
-              <p className="text-stone-600 mb-6 leading-relaxed">
+              <p className="text-stone-600 mb-6 leading-relaxed text-lg">
                 Whether you need cutting-edge software solutions, meticulous deep cleaning, professional gardening, or reliable distribution of high-quality snacks and housekeeping materials, our team is equipped with the expertise and dedication to exceed your expectations.
               </p>
-              <p className="text-stone-600 leading-relaxed">
+              <p className="text-stone-600 leading-relaxed text-lg">
                 We pride ourselves on our flexible scheduling, transparent pricing, and unwavering commitment to excellence. Your satisfaction is our top priority, and we continuously strive to innovate and improve our service offerings to better serve our community.
               </p>
             </motion.div>
@@ -269,18 +306,18 @@ export default function App() {
               initial={{ opacity: 0, x: 20 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
-              className="relative h-[400px] rounded-3xl overflow-hidden shadow-2xl"
+              className="relative h-[500px] rounded-[2.5rem] overflow-hidden shadow-2xl shadow-stone-300/50 border-8 border-white"
             >
               <img 
                 src="https://picsum.photos/seed/business/800/1000" 
                 alt="Professional Services" 
-                className="absolute inset-0 w-full h-full object-cover"
+                className="absolute inset-0 w-full h-full object-cover hover:scale-105 transition-transform duration-700"
                 referrerPolicy="no-referrer"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-stone-900/80 to-transparent flex items-end p-8">
+              <div className="absolute inset-0 bg-gradient-to-t from-stone-900 via-stone-900/40 to-transparent flex items-end p-10">
                 <div className="text-white">
-                  <p className="font-bold text-xl mb-2">Committed to Excellence</p>
-                  <p className="text-stone-300">Serving our community with pride and dedication.</p>
+                  <p className="font-display font-bold text-3xl mb-2">Committed to Excellence</p>
+                  <p className="text-stone-300 text-lg">Serving our community with pride and dedication.</p>
                 </div>
               </div>
             </motion.div>
@@ -289,11 +326,12 @@ export default function App() {
       </section>
 
       {/* Services Section */}
-      <section id="services" className="py-24 bg-white">
+      <section id="services" className="py-32 bg-white relative">
+        <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-stone-200 to-transparent" />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl font-bold mb-4">Everything You Need</h2>
-            <p className="text-stone-500 max-w-2xl mx-auto">
+          <div className="text-center mb-20">
+            <h2 className="font-display text-4xl md:text-5xl font-bold mb-6 text-stone-900">Everything You Need</h2>
+            <p className="text-stone-500 max-w-2xl mx-auto text-lg">
               Comprehensive services tailored to your needs. Whether you need a website built, 
               your house deep cleaned, or fresh snacks delivered.
             </p>
@@ -307,16 +345,17 @@ export default function App() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.1 }}
-                className="p-6 rounded-2xl border border-stone-100 bg-stone-50 hover:bg-white hover:shadow-xl hover:shadow-stone-200/50 transition-all group"
+                className="relative p-8 rounded-[2rem] bg-white border border-stone-100 shadow-xl shadow-stone-200/40 hover:shadow-2xl hover:shadow-emerald-900/10 transition-all duration-300 group overflow-hidden"
               >
-                <div className={`w-12 h-12 rounded-xl flex items-center justify-center mb-6 ${service.color}`}>
-                  <service.icon className="w-6 h-6" />
+                <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-emerald-50 to-teal-50 rounded-bl-full -z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                <div className={`w-14 h-14 rounded-2xl flex items-center justify-center mb-8 ${service.color} group-hover:scale-110 transition-transform duration-300 shadow-sm`}>
+                  <service.icon className="w-7 h-7" />
                 </div>
-                <h3 className="text-xl font-semibold mb-2">{service.title}</h3>
-                <p className="text-stone-600 leading-relaxed mb-4">
+                <h3 className="font-display text-2xl font-bold mb-3 text-stone-900">{service.title}</h3>
+                <p className="text-stone-600 leading-relaxed mb-6">
                   {service.description}
                 </p>
-                <div className="inline-flex items-center px-3 py-1 rounded-full bg-stone-200/50 text-stone-700 text-sm font-medium">
+                <div className="inline-flex items-center px-4 py-1.5 rounded-full bg-stone-100 text-stone-800 text-sm font-semibold group-hover:bg-emerald-50 group-hover:text-emerald-700 transition-colors">
                   {service.price}
                 </div>
               </motion.div>
@@ -326,47 +365,50 @@ export default function App() {
       </section>
 
       {/* Availability & Areas */}
-      <section className="py-24 bg-stone-900 text-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="py-32 bg-stone-950 text-white relative overflow-hidden">
+        <div className="absolute inset-0 bg-[url('https://picsum.photos/seed/map/1920/1080?blur=4')] bg-cover bg-center opacity-10 mix-blend-overlay" />
+        <div className="absolute top-0 right-0 w-[50%] h-[50%] rounded-full bg-emerald-600/10 blur-[120px]" />
+        
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="grid md:grid-cols-2 gap-16 items-center">
             <div>
-              <h2 className="text-3xl font-bold mb-6">Availability & Coverage</h2>
-              <p className="text-stone-400 mb-8 text-lg">
-                Flexible scheduling to meet your needs. Serving major routes across the city.
+              <h2 className="font-display text-4xl md:text-5xl font-bold mb-6">Availability & Coverage</h2>
+              <p className="text-stone-400 mb-12 text-lg leading-relaxed">
+                Flexible scheduling to meet your needs. Serving major routes across the city with prompt and reliable service.
               </p>
               
-              <div className="space-y-6">
-                <div className="flex items-start gap-4">
-                  <div className="w-10 h-10 rounded-full bg-emerald-500/20 flex items-center justify-center shrink-0">
-                    <MapPin className="w-5 h-5 text-emerald-400" />
+              <div className="space-y-8">
+                <div className="flex items-start gap-5">
+                  <div className="w-12 h-12 rounded-2xl bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center shrink-0 shadow-lg shadow-emerald-900/20">
+                    <MapPin className="w-6 h-6 text-emerald-400" />
                   </div>
                   <div>
-                    <h4 className="font-semibold text-lg mb-1">Service Area</h4>
-                    <p className="text-stone-400 font-medium text-emerald-400">Strictly within 25 km radius from Tambaram</p>
+                    <h4 className="font-display font-semibold text-2xl mb-2">Service Area</h4>
+                    <p className="text-stone-400 font-medium text-emerald-400 text-lg">Strictly within 25 km radius from Tambaram</p>
                   </div>
                 </div>
 
-                <div className="flex items-start gap-4">
-                  <div className="w-10 h-10 rounded-full bg-emerald-500/20 flex items-center justify-center shrink-0">
-                    <Clock className="w-5 h-5 text-emerald-400" />
+                <div className="flex items-start gap-5">
+                  <div className="w-12 h-12 rounded-2xl bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center shrink-0 shadow-lg shadow-emerald-900/20">
+                    <Clock className="w-6 h-6 text-emerald-400" />
                   </div>
                   <div>
-                    <h4 className="font-semibold text-lg mb-1">Working Hours</h4>
-                    <p className="text-stone-400">Daily Evening Appointments</p>
-                    <p className="text-stone-400">Sundays Available</p>
+                    <h4 className="font-display font-semibold text-2xl mb-2">Working Hours</h4>
+                    <p className="text-stone-400 text-lg">Daily Evening Appointments</p>
+                    <p className="text-stone-400 text-lg">Sundays Available</p>
                   </div>
                 </div>
                 
-                <div className="flex items-start gap-4">
-                  <div className="w-10 h-10 rounded-full bg-emerald-500/20 flex items-center justify-center shrink-0">
-                    <MapPin className="w-5 h-5 text-emerald-400" />
+                <div className="flex items-start gap-5">
+                  <div className="w-12 h-12 rounded-2xl bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center shrink-0 shadow-lg shadow-emerald-900/20">
+                    <MapPin className="w-6 h-6 text-emerald-400" />
                   </div>
                   <div>
-                    <h4 className="font-semibold text-lg mb-2">Service Routes</h4>
-                    <ul className="space-y-2">
+                    <h4 className="font-display font-semibold text-2xl mb-3">Service Routes</h4>
+                    <ul className="space-y-3">
                       {areas.map((area) => (
-                        <li key={area} className="flex items-center gap-2 text-stone-400">
-                          <CheckCircle2 className="w-4 h-4 text-emerald-500" />
+                        <li key={area} className="flex items-center gap-3 text-stone-300 text-lg">
+                          <CheckCircle2 className="w-5 h-5 text-emerald-500" />
                           {area}
                         </li>
                       ))}
@@ -377,19 +419,19 @@ export default function App() {
             </div>
             
             <div className="relative">
-              <div className="absolute inset-0 bg-gradient-to-tr from-emerald-500 to-teal-500 rounded-3xl blur-3xl opacity-20" />
-              <div className="bg-stone-800 border border-stone-700 p-8 rounded-3xl relative">
-                <h3 className="text-xl font-semibold mb-6 flex items-center gap-2">
-                  <CreditCard className="w-5 h-5 text-emerald-400" />
+              <div className="absolute inset-0 bg-gradient-to-tr from-emerald-500 to-teal-500 rounded-[2.5rem] blur-3xl opacity-20" />
+              <div className="bg-white/5 border border-white/10 backdrop-blur-xl p-10 rounded-[2.5rem] shadow-2xl relative">
+                <h3 className="font-display text-2xl font-bold mb-8 flex items-center gap-3">
+                  <CreditCard className="w-6 h-6 text-emerald-400" />
                   Payment Information
                 </h3>
-                <div className="bg-stone-900 p-6 rounded-2xl border border-stone-700 text-center">
-                  <p className="text-sm text-stone-400 mb-2">Google Pay / UPI ID</p>
-                  <p className="text-xl md:text-2xl font-mono text-emerald-400 break-all">
+                <div className="bg-stone-900/80 p-8 rounded-2xl border border-white/5 text-center shadow-inner">
+                  <p className="text-sm text-stone-400 mb-3 uppercase tracking-widest font-semibold">Google Pay / UPI ID</p>
+                  <p className="text-2xl md:text-3xl font-mono text-emerald-400 break-all font-medium">
                     parthi101089-2@oksbi
                   </p>
                 </div>
-                <p className="text-stone-400 text-sm mt-6 text-center">
+                <p className="text-stone-400 text-base mt-8 text-center">
                   Secure payments accepted via GPay for all services and distributions.
                 </p>
               </div>
@@ -399,30 +441,31 @@ export default function App() {
       </section>
 
       {/* Booking Form */}
-      <section id="booking" className="py-24 bg-stone-50">
+      <section id="booking" className="py-32 bg-stone-50 relative">
+        <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-stone-200 to-transparent" />
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="bg-white rounded-3xl shadow-xl shadow-stone-200/50 border border-stone-100 p-8 md:p-12">
-            <div className="text-center mb-10">
-              <h2 className="text-3xl font-bold mb-4">Book an Appointment</h2>
-              <p className="text-stone-500">Fill out the form below to schedule a service.</p>
+          <div className="bg-white rounded-[2.5rem] shadow-2xl shadow-stone-200/50 border border-stone-100 p-8 md:p-12">
+            <div className="text-center mb-12">
+              <h2 className="font-display text-4xl md:text-5xl font-bold mb-4 text-stone-900">Book an Appointment</h2>
+              <p className="text-stone-500 text-lg">Fill out the form below to schedule a service.</p>
             </div>
 
             {isBooking ? (
               <motion.div 
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
-                className="text-center py-12"
+                className="text-center py-16"
               >
-                <div className="w-20 h-20 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-6">
-                  <CheckCircle2 className="w-10 h-10" />
+                <div className="w-24 h-24 bg-emerald-50 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-8 shadow-inner">
+                  <CheckCircle2 className="w-12 h-12" />
                 </div>
-                <h3 className="text-2xl font-bold mb-2">Request Sent!</h3>
-                <p className="text-stone-600 mb-8">
+                <h3 className="font-display text-3xl font-bold mb-4 text-stone-900">Request Sent!</h3>
+                <p className="text-stone-600 mb-10 text-lg max-w-md mx-auto">
                   Thank you for booking. I will contact you shortly to confirm the appointment.
                 </p>
                 <button 
                   onClick={() => setIsBooking(false)}
-                  className="text-emerald-600 font-medium hover:underline"
+                  className="text-emerald-600 font-semibold hover:text-emerald-700 hover:underline transition-colors"
                 >
                   Book another service
                 </button>
@@ -430,61 +473,62 @@ export default function App() {
             ) : (
               <form 
                 onSubmit={handleSubmit}
-                className="space-y-6"
+                className="space-y-8"
               >
                 {submitError && (
-                  <div className="p-4 bg-red-50 text-red-600 rounded-xl border border-red-100 text-sm">
+                  <div className="p-4 bg-red-50 text-red-700 rounded-2xl border border-red-100 text-sm font-medium flex items-center gap-3">
+                    <div className="w-2 h-2 rounded-full bg-red-500" />
                     {submitError}
                   </div>
                 )}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                   <div>
-                    <label className="block text-sm font-medium text-stone-700 mb-2">Name</label>
+                    <label className="block text-sm font-semibold text-stone-700 mb-2">Name</label>
                     <input 
                       required
                       type="text" 
                       name="name"
                       value={formData.name}
                       onChange={(e) => setFormData({...formData, name: e.target.value})}
-                      className="w-full px-4 py-3 rounded-xl border border-stone-200 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-all"
+                      className="w-full px-5 py-4 rounded-2xl bg-stone-50 border-transparent focus:bg-white focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 outline-none transition-all"
                       placeholder="Your name"
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-stone-700 mb-2">Email</label>
+                    <label className="block text-sm font-semibold text-stone-700 mb-2">Email</label>
                     <input 
                       required
                       type="email" 
                       name="email"
                       value={formData.email}
                       onChange={(e) => setFormData({...formData, email: e.target.value})}
-                      className="w-full px-4 py-3 rounded-xl border border-stone-200 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-all"
+                      className="w-full px-5 py-4 rounded-2xl bg-stone-50 border-transparent focus:bg-white focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 outline-none transition-all"
                       placeholder="Your email address"
                     />
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                   <div>
-                    <label className="block text-sm font-medium text-stone-700 mb-2">Phone Number</label>
+                    <label className="block text-sm font-semibold text-stone-700 mb-2">Phone Number</label>
                     <input 
                       required
                       type="tel" 
                       name="phone"
                       value={formData.phone}
                       onChange={(e) => setFormData({...formData, phone: e.target.value})}
-                      className="w-full px-4 py-3 rounded-xl border border-stone-200 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-all"
+                      className="w-full px-5 py-4 rounded-2xl bg-stone-50 border-transparent focus:bg-white focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 outline-none transition-all"
                       placeholder="Your phone number"
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-stone-700 mb-2">Service Required</label>
+                    <label className="block text-sm font-semibold text-stone-700 mb-2">Service Required</label>
                     <select 
                       required
                       name="service"
                       value={formData.service}
                       onChange={(e) => setFormData({...formData, service: e.target.value})}
-                      className="w-full px-4 py-3 rounded-xl border border-stone-200 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-all bg-white"
+                      className="w-full px-5 py-4 rounded-2xl bg-stone-50 border-transparent focus:bg-white focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 outline-none transition-all appearance-none"
                     >
                       <option value="">Select a service...</option>
                       {services.map(s => (
@@ -494,25 +538,25 @@ export default function App() {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                   <div>
-                    <label className="block text-sm font-medium text-stone-700 mb-2">Preferred Date</label>
+                    <label className="block text-sm font-semibold text-stone-700 mb-2">Preferred Date</label>
                     <input 
                       required
                       type="date" 
                       name="date"
                       value={selectedDate}
                       onChange={(e) => setSelectedDate(e.target.value)}
-                      className="w-full px-4 py-3 rounded-xl border border-stone-200 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-all"
+                      className="w-full px-5 py-4 rounded-2xl bg-stone-50 border-transparent focus:bg-white focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 outline-none transition-all"
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-stone-700 mb-2">Preferred Time</label>
+                    <label className="block text-sm font-semibold text-stone-700 mb-2">Preferred Time</label>
                     <select 
                       required
                       name="time"
                       disabled={!selectedDate}
-                      className="w-full px-4 py-3 rounded-xl border border-stone-200 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-all bg-white disabled:bg-stone-100 disabled:text-stone-400"
+                      className="w-full px-5 py-4 rounded-2xl bg-stone-50 border-transparent focus:bg-white focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 outline-none transition-all disabled:opacity-50 appearance-none"
                     >
                       <option value="">{selectedDate ? 'Select time...' : 'Please select a date first'}</option>
                       {selectedDay && (
@@ -525,13 +569,13 @@ export default function App() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-stone-700 mb-2">Location / Area</label>
+                  <label className="block text-sm font-semibold text-stone-700 mb-2">Location / Area</label>
                   <select 
                     required
                     name="location"
                     value={formData.location}
                     onChange={(e) => setFormData({...formData, location: e.target.value})}
-                    className="w-full px-4 py-3 rounded-xl border border-stone-200 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-all bg-white"
+                    className="w-full px-5 py-4 rounded-2xl bg-stone-50 border-transparent focus:bg-white focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 outline-none transition-all appearance-none"
                   >
                     <option value="">Select your area...</option>
                     {areas.map(a => (
@@ -539,20 +583,20 @@ export default function App() {
                     ))}
                     <option value="other">Other (Please specify in notes)</option>
                   </select>
-                  <p className="mt-2 text-sm text-emerald-600 font-medium flex items-center gap-1">
+                  <p className="mt-3 text-sm text-emerald-600 font-medium flex items-center gap-2">
                     <MapPin className="w-4 h-4" />
                     Note: Bookings are only accepted within a 25 km radius from Tambaram.
                   </p>
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-stone-700 mb-2">Additional Notes</label>
+                  <label className="block text-sm font-semibold text-stone-700 mb-2">Additional Notes</label>
                   <textarea 
                     rows={4}
                     name="notes"
                     value={formData.notes}
                     onChange={(e) => setFormData({...formData, notes: e.target.value})}
-                    className="w-full px-4 py-3 rounded-xl border border-stone-200 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-all resize-none"
+                    className="w-full px-5 py-4 rounded-2xl bg-stone-50 border-transparent focus:bg-white focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 outline-none transition-all resize-none"
                     placeholder="Any specific requirements or details..."
                   />
                 </div>
@@ -560,12 +604,12 @@ export default function App() {
                 <button 
                   type="submit"
                   disabled={isSubmitting}
-                  className="w-full bg-emerald-600 hover:bg-emerald-700 disabled:bg-emerald-400 text-white py-4 rounded-xl font-medium transition-colors shadow-lg shadow-emerald-600/20 flex items-center justify-center gap-2"
+                  className="w-full bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 disabled:from-emerald-300 disabled:to-teal-400 text-white py-5 rounded-2xl font-bold text-lg transition-all shadow-lg shadow-emerald-500/25 flex items-center justify-center gap-3"
                 >
                   {isSubmitting ? (
-                    <Loader2 className="w-5 h-5 animate-spin" />
+                    <Loader2 className="w-6 h-6 animate-spin" />
                   ) : (
-                    <CalendarDays className="w-5 h-5" />
+                    <CalendarDays className="w-6 h-6" />
                   )}
                   {isSubmitting ? 'Submitting...' : 'Confirm Booking'}
                 </button>
@@ -576,96 +620,124 @@ export default function App() {
       </section>
 
       {/* Donate for R&D Section */}
-      <section className="py-24 bg-emerald-900 text-white relative overflow-hidden">
-        <div className="absolute inset-0 bg-[url('https://picsum.photos/seed/tech/1920/1080?blur=4')] bg-cover bg-center opacity-10" />
+      <section className="py-32 bg-stone-950 text-white relative overflow-hidden">
+        <div className="absolute inset-0 bg-[url('https://picsum.photos/seed/tech/1920/1080?blur=4')] bg-cover bg-center opacity-10 mix-blend-overlay" />
+        <div className="absolute bottom-0 left-0 w-[50%] h-[50%] rounded-full bg-emerald-600/10 blur-[120px]" />
+        
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
-          <div className="w-16 h-16 bg-emerald-800 rounded-2xl flex items-center justify-center mx-auto mb-6 border border-emerald-700">
-            <FlaskConical className="w-8 h-8 text-emerald-300" />
+          <div className="w-20 h-20 bg-emerald-500/20 rounded-[2rem] flex items-center justify-center mx-auto mb-8 border border-emerald-500/30 shadow-2xl shadow-emerald-900/20">
+            <FlaskConical className="w-10 h-10 text-emerald-400" />
           </div>
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">Donate for R & D</h2>
-          <p className="text-emerald-100/80 text-lg mb-12 max-w-2xl mx-auto">
+          <h2 className="font-display text-4xl md:text-5xl font-bold mb-6">Donate for R & D</h2>
+          <p className="text-stone-400 text-lg mb-16 max-w-2xl mx-auto leading-relaxed">
             Your contributions fuel our Research and Development. Help us build better software, improve our services, and innovate for the future.
           </p>
           
-          <div className="bg-white text-stone-900 p-8 rounded-3xl max-w-sm mx-auto shadow-2xl">
-            <div className="mb-6">
-              <div className="w-12 h-12 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center font-bold text-xl mx-auto mb-2">
-                P
-              </div>
-              <h3 className="font-semibold text-lg">Parthiban D</h3>
-              <p className="text-stone-500 text-sm">Scan to pay with any UPI app</p>
-            </div>
+          <div className="bg-white/5 border border-white/10 backdrop-blur-xl p-10 rounded-[2.5rem] max-w-sm mx-auto shadow-2xl relative overflow-hidden group">
+            <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/10 to-teal-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
             
-            <div className="bg-stone-50 p-4 rounded-2xl mb-6 inline-block border border-stone-100">
-              <img 
-                src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=upi://pay?pa=parthi101089-2@oksbi&pn=Parthiban%20D&cu=INR" 
-                alt="Donation QR Code" 
-                className="w-48 h-48"
-              />
-            </div>
-            
-            <div className="bg-stone-100 p-4 rounded-xl flex items-center justify-between gap-4 text-left">
-              <div>
-                <p className="text-xs text-stone-500 uppercase tracking-wider font-semibold mb-1">UPI ID</p>
-                <p className="font-mono text-emerald-700 font-medium break-all">parthi101089-2@oksbi</p>
+            <div className="relative z-10">
+              <div className="mb-8">
+                <div className="w-16 h-16 bg-gradient-to-br from-emerald-400 to-teal-500 text-white rounded-full flex items-center justify-center font-display font-bold text-3xl mx-auto mb-4 shadow-lg shadow-emerald-500/25">
+                  P
+                </div>
+                <h3 className="font-display font-bold text-2xl text-white mb-1">Parthiban D</h3>
+                <p className="text-stone-400 text-sm uppercase tracking-widest font-semibold">Scan to pay with any UPI app</p>
               </div>
-              <Heart className="w-6 h-6 text-emerald-500 shrink-0" />
+              
+              <div className="bg-white p-4 rounded-3xl mb-8 inline-block border-4 border-emerald-500/20 shadow-xl shadow-emerald-900/20 group-hover:scale-105 transition-transform duration-500">
+                <img 
+                  src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=upi://pay?pa=parthi101089-2@oksbi&pn=Parthiban%20D&cu=INR" 
+                  alt="Donation QR Code" 
+                  className="w-48 h-48 rounded-xl"
+                />
+              </div>
+              
+              <div className="bg-stone-900/80 p-5 rounded-2xl flex items-center justify-between gap-4 text-left border border-white/5 shadow-inner">
+                <div>
+                  <p className="text-xs text-stone-500 uppercase tracking-widest font-bold mb-1">UPI ID</p>
+                  <p className="font-mono text-emerald-400 font-medium break-all text-lg">parthi101089-2@oksbi</p>
+                </div>
+                <div className="w-10 h-10 rounded-full bg-emerald-500/20 flex items-center justify-center shrink-0">
+                  <Heart className="w-5 h-5 text-emerald-400" />
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="bg-stone-900 border-t border-stone-800 pt-16 pb-8 text-stone-400">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-12 mb-12">
-            <div>
-              <div className="flex items-center gap-3 mb-6">
-                <div className="w-10 h-10 bg-emerald-600/20 text-emerald-500 rounded-xl flex items-center justify-center font-bold text-xl">
+      <footer className="bg-stone-950 border-t border-white/10 pt-20 pb-10 text-stone-400 relative overflow-hidden">
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-3xl h-px bg-gradient-to-r from-transparent via-emerald-500/50 to-transparent" />
+        
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-12 mb-16">
+            <div className="md:col-span-5">
+              <div className="flex items-center gap-4 mb-8">
+                <div className="w-12 h-12 bg-gradient-to-br from-emerald-400 to-teal-500 text-white rounded-2xl flex items-center justify-center font-display font-bold text-2xl shadow-lg shadow-emerald-500/25">
                   P
                 </div>
-                <span className="font-semibold text-xl text-white tracking-tight">Parthi Services</span>
+                <span className="font-display font-bold text-2xl text-white tracking-tight">Parthi Services</span>
               </div>
-              <p className="text-stone-400 leading-relaxed mb-6">
+              <p className="text-stone-400 leading-relaxed mb-8 text-lg max-w-md">
                 Professional multi-service provider offering software programming, deep cleaning, housekeeping, snacks distribution, and more.
               </p>
+              <div className="flex items-center gap-4">
+                <a href="mailto:parthi1010891@gmail.com" className="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center hover:bg-emerald-500/20 hover:border-emerald-500/30 hover:text-emerald-400 transition-all">
+                  <Mail className="w-5 h-5" />
+                </a>
+              </div>
             </div>
             
-            <div>
-              <h3 className="text-white font-semibold mb-6">Quick Links</h3>
+            <div className="md:col-span-3 md:col-start-7">
+              <h3 className="font-display text-white font-bold text-xl mb-6">Quick Links</h3>
               <ul className="space-y-4">
                 <li>
-                  <button onClick={() => document.getElementById('about')?.scrollIntoView({ behavior: 'smooth' })} className="hover:text-emerald-400 transition-colors">About Us</button>
+                  <button onClick={() => document.getElementById('about')?.scrollIntoView({ behavior: 'smooth' })} className="text-stone-400 hover:text-emerald-400 transition-colors text-lg flex items-center gap-2 group">
+                    <div className="w-1.5 h-1.5 rounded-full bg-emerald-500/0 group-hover:bg-emerald-500 transition-colors" />
+                    About Us
+                  </button>
                 </li>
                 <li>
-                  <button onClick={() => document.getElementById('services')?.scrollIntoView({ behavior: 'smooth' })} className="hover:text-emerald-400 transition-colors">Our Services</button>
+                  <button onClick={() => document.getElementById('services')?.scrollIntoView({ behavior: 'smooth' })} className="text-stone-400 hover:text-emerald-400 transition-colors text-lg flex items-center gap-2 group">
+                    <div className="w-1.5 h-1.5 rounded-full bg-emerald-500/0 group-hover:bg-emerald-500 transition-colors" />
+                    Our Services
+                  </button>
                 </li>
                 <li>
-                  <button onClick={() => document.getElementById('booking')?.scrollIntoView({ behavior: 'smooth' })} className="hover:text-emerald-400 transition-colors">Book Appointment</button>
+                  <button onClick={() => document.getElementById('booking')?.scrollIntoView({ behavior: 'smooth' })} className="text-stone-400 hover:text-emerald-400 transition-colors text-lg flex items-center gap-2 group">
+                    <div className="w-1.5 h-1.5 rounded-full bg-emerald-500/0 group-hover:bg-emerald-500 transition-colors" />
+                    Book Appointment
+                  </button>
                 </li>
               </ul>
             </div>
             
-            <div>
-              <h3 className="text-white font-semibold mb-6">Legal</h3>
+            <div className="md:col-span-3">
+              <h3 className="font-display text-white font-bold text-xl mb-6">Legal</h3>
               <ul className="space-y-4">
                 <li>
-                  <button onClick={() => setActiveModal('privacy')} className="hover:text-emerald-400 transition-colors flex items-center gap-2">
-                    <Shield className="w-4 h-4" /> Privacy Policy
+                  <button onClick={() => setActiveModal('privacy')} className="text-stone-400 hover:text-emerald-400 transition-colors text-lg flex items-center gap-3 group">
+                    <Shield className="w-5 h-5 text-stone-500 group-hover:text-emerald-500 transition-colors" /> 
+                    Privacy Policy
                   </button>
                 </li>
                 <li>
-                  <button onClick={() => setActiveModal('terms')} className="hover:text-emerald-400 transition-colors flex items-center gap-2">
-                    <FileText className="w-4 h-4" /> Terms of Service
+                  <button onClick={() => setActiveModal('terms')} className="text-stone-400 hover:text-emerald-400 transition-colors text-lg flex items-center gap-3 group">
+                    <FileText className="w-5 h-5 text-stone-500 group-hover:text-emerald-500 transition-colors" /> 
+                    Terms of Service
                   </button>
                 </li>
               </ul>
             </div>
           </div>
           
-          <div className="pt-8 border-t border-stone-800 text-center text-sm text-stone-500 flex flex-col md:flex-row justify-between items-center gap-4">
-            <p>© {new Date().getFullYear()} Parthi Services. All rights reserved.</p>
-            <p>Designed for excellence.</p>
+          <div className="pt-8 border-t border-white/10 text-center text-stone-500 flex flex-col md:flex-row justify-between items-center gap-4">
+            <p className="text-sm">© {new Date().getFullYear()} Parthi Services. All rights reserved.</p>
+            <p className="text-sm flex items-center gap-2">
+              Designed with <Heart className="w-4 h-4 text-emerald-500" /> for excellence
+            </p>
           </div>
         </div>
       </footer>
